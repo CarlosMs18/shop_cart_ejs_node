@@ -28,4 +28,10 @@ router.get('/signin',authController.signin)
 router.post('/signin',authController.autenticarUsuario)
 
 router.get('/reset-password',authController.resetPassword)
+
+router.post('/reset-password',[
+    check('email','Debe de ingresar un email valido')
+    .isEmail()
+    .normalizeEmail()
+],authController.postresetPassword)
 module.exports = router
