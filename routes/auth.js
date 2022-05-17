@@ -34,4 +34,13 @@ router.post('/reset-password',[
     .isEmail()
     .normalizeEmail()
 ],authController.postresetPassword)
+
+
+router.get('/reset-password/:token',authController.formNewPassword)
+
+router.post('/new-password',[
+    check('password','El password debe de tener un minimo de 5 caracteres')
+    .isLength({min : 5})
+    .trim(),
+],authController.postnewPassword)
 module.exports = router

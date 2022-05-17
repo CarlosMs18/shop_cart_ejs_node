@@ -53,7 +53,7 @@ exports.postsignup = async(req, res , next) => {
 }
 
 exports.signin = (req, res , next) => {
-
+    
     let message = req.flash('error')
     if(message.length > 0){
         message = message[0]
@@ -61,11 +61,11 @@ exports.signin = (req, res , next) => {
         message =null
     }
     
-
+    
     res.render('auth/signin',{
         pageTitle : 'Sign In',
         path : '/auth/signin',
-        errorMessage : message
+        errorMessage : message,
     })
 }
 
@@ -133,6 +133,61 @@ exports.postresetPassword = async(req, res , next) => {
     } catch (error) {
         console.log(error)
     }
+}
 
-  
+exports.formNewPassword = async(req, res , next) => {
+        const token = req.params.token
+
+        const user = await User.findOne({
+            token
+        })
+       
+        if(!user){
+            req.flash('error','Sucedio un ERROR, solicite una nueva contraseña  de nuevo')
+            return res.redirect('/auth/signin')
+        }
+
+        res.render('auth/new-password',{
+            pageTitle : 'New Password',
+            token,
+            path : '',
+            errorMessage : ''
+        })
+}
+
+exports.postnewPassword = async(req, res , next) => {
+        const token = req.body.tokenPassword    
+        const password = req.body.password
+
+        const errors = validationResult(req)
+        
+        if(!errors.isEmpty()){
+            return res.render('auth/new-password',{
+                pageTitle : 'New Password',
+                token,
+                path : '',
+                errorMessage :errors.array()[0].msg,
+                 
+            })
+        }
+        const user = await User.findOne({token})
+        if(!user){
+            req.flash('error','Hubo un problema, vuelva a recargar la pagina')
+            return res.redirect('/auth/signin')
+        }
+        console.log('a')
+        try {
+            
+            user.password = password
+            user.token = undefined
+            user.expiration = undefined
+
+            await user.save()
+            console.log(user)
+            res.redirect('/auth/signin')
+        } catch (error) {
+            console.log(err)
+        }
+
+        
 }
