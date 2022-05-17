@@ -10,7 +10,10 @@ const MongoStore = require('connect-mongo')
 
 
 const passport = require('./config/passport')
+
 const authRoutes = require('./routes/auth')
+const shopRoutes = require('./routes/shop')
+const adminRoutes =require('./routes/admin')
 
 
 const app = express()
@@ -45,6 +48,8 @@ app.use(flash())
 
 
 app.use('/auth',authRoutes)
+app.use('/admin',adminRoutes)
+app.use(shopRoutes)
 
 mongoose.connect(process.env.MONGO_CNN)
         .then(result =>{

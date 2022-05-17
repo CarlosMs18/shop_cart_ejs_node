@@ -1,9 +1,15 @@
 const {model, Schema} = require('mongoose')
 const bcryptjs = require('bcryptjs')
 const userSchema = Schema({
-  
-    email : String,
-    password : String,
+    
+    email : {
+        type : String,
+        required :true
+    },
+    password : {
+        type : String,
+        required :true
+    },
     estado : {
         type : Number,
         default : 0
