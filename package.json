@@ -1,0 +1,27 @@
+{
+  "name": "shop_cart_ejs_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarlosMs18/shop_cart_ejs_node.git"
+  },
+  "author": "Carlos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CarlosMs18/shop_cart_ejs_node/issues"
+  },
+  "homepage": "https://github.com/CarlosMs18/shop_cart_ejs_node#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
