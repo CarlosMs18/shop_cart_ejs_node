@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-
+const bodyParser = require('body-parser')
 
 
 
@@ -9,7 +9,10 @@ const mongoose = require('mongoose')
 
 const app = express()
 
+app.set('views','views')
+app.set('engine views','ejs')
 
+app.use(bodyParser.urlencoded({extended : false}))
 
 
 mongoose.connect(process.env.MONGO_CNN)
