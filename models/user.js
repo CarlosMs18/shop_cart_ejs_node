@@ -4,6 +4,10 @@ const userSchema = Schema({
   
     email : String,
     password : String,
+    estado : {
+        type : Number,
+        default : 0
+    },
     token : String,
     expiration : Date
 })
@@ -19,4 +23,8 @@ userSchema.pre('save',function(next){
     next()
 })
 
+
+userSchema.methods.comparePassword = function(password){
+    return bcryptjs.compareSync(password, this.password)
+}
 module.exports = model('User',userSchema)

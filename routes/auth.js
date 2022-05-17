@@ -22,4 +22,10 @@ router.post('/signup',[
     })
 ],
 authController.postsignup)
+
+router.get('/signin',authController.signin)
+
+router.post('/signin',authController.autenticarUsuario)
+
+router.get('/reset-password',authController.resetPassword)
 module.exports = router
