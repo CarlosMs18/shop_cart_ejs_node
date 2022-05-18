@@ -13,6 +13,8 @@ const multer = require('multer')
 
 const passport = require('./config/passport')
 
+const errorController = require('./controllers/404')
+
 const authRoutes = require('./routes/auth')
 const shopRoutes = require('./routes/shop')
 const adminRoutes =require('./routes/admin')
@@ -76,6 +78,8 @@ app.use('/auth',authRoutes)
 app.use('/admin',adminRoutes)
 app.use(shopRoutes)
 
+
+app.use(errorController.get404)
 mongoose.connect(process.env.MONGO_CNN)
         .then(result =>{
             app.listen(process.env.PORT, () => {
