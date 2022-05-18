@@ -27,6 +27,8 @@ router.get('/signin',authController.signin)
 
 router.post('/signin',authController.autenticarUsuario)
 
+
+router.post('/logout',authController.logout)
 router.get('/reset-password',authController.resetPassword)
 
 router.post('/reset-password',[

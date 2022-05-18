@@ -3,10 +3,16 @@ const passport = require('passport')
 const crypto = require('crypto')
 const {validationResult} = require('express-validator')
 exports.signup = (req, res , next) => {
+    let message = req.flash('error')
+    if(message.length > 0){
+        message = message[0]
+    }else{
+        message =null
+    }
     
     res.render('auth/signup',{
         pageTitle : 'Sign Up',
-        errorMessage : '',
+        errorMessage : message,
         oldInput : '',
         validationErrors : [],
         path : '/auth/signup'
@@ -15,15 +21,15 @@ exports.signup = (req, res , next) => {
 
 
 exports.postsignup = async(req, res , next) => {
-
+    
     const email = req.body.email
     const password = req.body.password
     const confirmPassword = req.body.confirmPassword
 
     const errors = validationResult(req)
-   
+    console.log(errors)
     if(!errors.isEmpty()){
-        res.render('auth/signup',{
+        return res.render('auth/signup',{
             pageTitle : 'Sign Up',
             path : '/auth/signup',
             errorMessage : errors.array()[0].msg,
@@ -36,7 +42,12 @@ exports.postsignup = async(req, res , next) => {
             
         })
     }
-
+    
+    const emailExist = await User.findOne({email})
+    if(emailExist){
+        req.flash('error','El email ya se encuentra en uso')
+        return res.redirect('/auth/signup')
+    }
     try {
         const user = new User({
             email,
@@ -79,6 +90,12 @@ exports.autenticarUsuario  = passport.authenticate('local',{
 })
 
 
+exports.logout = (req, res , next) => {
+    req.logout()
+    res.redirect('/auth/signin')
+}
+
+
 exports.resetPassword =(req, res , next) => {
     let message = req.flash('error')
     if(message.length > 0){
@@ -86,7 +103,7 @@ exports.resetPassword =(req, res , next) => {
     }else{
         message = ''
     }
-    console.log(req.flash('error'))
+    
     res.render('auth/reset-password',{
         pageTitle : 'Reset Password',
         path : '',

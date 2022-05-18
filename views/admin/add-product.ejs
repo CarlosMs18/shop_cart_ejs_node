@@ -6,7 +6,9 @@
 <body>
     <%-include('../includes/navigation.ejs') %>
     <main>
-      
+        <% if(errorMessage) { %>
+            <div class="user-message user-message--error"><%= errorMessage %></div>
+            <% } %>
         <form class="product-form" method="POST" enctype="multipart/form-data">
             <div class="form-control">
                 <label for="title">Title</label>
@@ -14,7 +16,7 @@
                     type="text" 
                     name="title" 
                     id="title" 
-                  
+                    value="<%= oldInput.title %>"
                     >
             </div>
          
@@ -32,7 +34,7 @@
                     type="number" 
                     name="price" 
                     id="price" 
-                   
+                    value="<%= oldInput.price %>"
                     step="0.01" >
                     
             </div>
@@ -41,7 +43,8 @@
                 <textarea 
                     name="description" 
                     id="description" 
-                    rows="5"></textarea>
+                    
+                    rows="5"><%= oldInput.description %></textarea>
                 
         
 
