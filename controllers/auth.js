@@ -2,6 +2,7 @@ const User = require('../models/user')
 const passport = require('passport')
 const crypto = require('crypto')
 const {validationResult} = require('express-validator')
+const enviarEmail = require('../handler/email')
 exports.signup = (req, res , next) => {
     let message = req.flash('error')
     if(message.length > 0){
@@ -135,16 +136,21 @@ exports.postresetPassword = async(req, res , next) => {
             req.flash('error','El usuario no existe')
             return res.redirect('/auth/reset-password')
         }
-
+        
         user.token = crypto.randomBytes(20).toString('hex')
         user.expiration = Date.now() + 360000
 
     
         await user.save()
 
-        const resetUrl = `http://${req.headers.host}/auth/reset-password/${user.token}`
-
-        console.log(resetUrl)
+        const url = `http://${req.headers.host}/auth/reset-password/${user.token}`
+        enviarEmail.enviarEmail({
+            user,
+            url,
+            subject : 'Confirma tu correo',
+            archivo : 'reset-password'
+        })
+        
 
         res.redirect('/auth/signin')
     } catch (error) {
@@ -192,7 +198,7 @@ exports.postnewPassword = async(req, res , next) => {
             req.flash('error','Hubo un problema, vuelva a recargar la pagina')
             return res.redirect('/auth/signin')
         }
-        console.log('a')
+      
         try {
             
             user.password = password
@@ -200,7 +206,7 @@ exports.postnewPassword = async(req, res , next) => {
             user.expiration = undefined
 
             await user.save()
-            console.log(user)
+           
             res.redirect('/auth/signin')
         } catch (error) {
             console.log(err)

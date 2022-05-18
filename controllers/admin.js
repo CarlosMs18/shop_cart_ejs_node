@@ -49,7 +49,7 @@ exports.postAddProduct =async( req, res, next) => {
     }
     
     const image = imageBody.path
-    console.log(image)
+    
     try {
         const product = new Product({
             title,
@@ -131,7 +131,7 @@ exports.postEditProduct = async(req, res , next) => {
         }
 
 
-        console.log(product)
+       
         try {
             product.title = title
             product.price = price
