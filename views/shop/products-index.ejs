@@ -7,38 +7,35 @@
 
     <main>
         <% if(products.length > 0) { %>
-            
             <div class="grid">
-                <% for(let prod of products) { %>
+                <% for(let product of products) { %>
                     <article class="card product-item">
                         <header class="card__header">
-                            <h1 class="product__title"><%= prod.title %></h1>
+                            <h1 class="product__title"><%= product.title %></h1>
                         </header>
                         <div class="card__image">
-                            <img src="/<%= prod.image %>"
-                                alt="<%= prod.title %>">
+                            <img src="/<%= product.image  %>"
+                                alt="<%= product.title %>">
                         </div>
                         <div class="card__content">
                             <h2 class="product__price"></h2>
-                            <p class="product__description"><%= prod.description %></p>
+                            <p class="product__description"><%= product.description %></p>
                         </div>
                         <div class="card__actions">
-                            <a href="/product/<%= prod._id %>" class="btn">Details</a>
-                       
+                            <a href="/product/<%= product._id %>" class="btn">Details</a>
+                        
+
                         </div>
                     </article>
 
-                    
                     <% } %>
-                </div>
-            
-            <% } else { %> 
-             <p>No hay productos para mostrar</p>
-                <% } %>
-          
-              
+                   
+
+               <% }  else { %>
                 
-               
-            
+                <h1>No hay productos para mostrar!</h1>
+                <%} %>
+            </div>
+      
     </main>
 <%- include('../includes/end.ejs') %>
