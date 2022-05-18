@@ -45,4 +45,6 @@ router.post('/new-password',[
     .isLength({min : 5})
     .trim(),
 ],authController.postnewPassword)
+
+router.get('/confirm-email/:email',authController.confirmEmail)
 module.exports = router

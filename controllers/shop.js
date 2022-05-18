@@ -52,7 +52,7 @@ exports.addtoCart = async(req, res , next) => {
         req.flash('error','El producto no existe')
         return res.redirect('/')
     }
-    const user = await User.findById(req.user._id)
+    const user = await User.findOne({_id : req.user._id, estado :1})
     try {
         await user.addtoCart(product)
         res.redirect('/')
@@ -64,7 +64,7 @@ exports.addtoCart = async(req, res , next) => {
 
 
 exports.getCart = async(req, res , next) => {
-    const user = await User.findById(req.user._id)
+    const user = await User.findOne({_id : req.user._id, estado :1})
     const items = await user.populate('cart.items.productId')
     const products = user.cart.items
         res.render('shop/cart',{
@@ -82,7 +82,7 @@ exports.deleteProductCart = async(req, res , next) => {
         return res.redirect('/cart')
     }
   
-    const user = await User.findById(req.user._id)
+    const user = await User.findOne({_id : req.user._id, estado :1})
     try {
         user.deleteItemCart(productId)
         res.redirect('/cart')
@@ -93,7 +93,7 @@ exports.deleteProductCart = async(req, res , next) => {
 
 
 exports.createOrder = async(req, res , next) => {
-    const user = await User.findById(req.user._id)
+    const user = await User.findOne({_id : req.user._id, estado :1})
 
     
     const items = await user.populate('cart.items.productId')

@@ -10,7 +10,7 @@ passport.use(
     },
     async(email, password, done) => {
         try {
-            const user = await User.findOne({email})
+            const user = await User.findOne({email, estado : 1})
 
             if(!user){
                 return done(null, false,{

@@ -14,6 +14,7 @@ const userSchema = Schema({
         type : Number,
         default : 0
     },
+    
     cart : {
         items : [
             {

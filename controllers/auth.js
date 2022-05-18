@@ -56,6 +56,16 @@ exports.postsignup = async(req, res , next) => {
         })
 
         await user.save()
+        const url = `http://${req.headers.host}/auth/confirm-email/${email}`
+        enviarEmail.enviarEmail({
+            user,
+            url,
+            subject : 'Confirma tu correo',
+            archivo : 'confirm-email'
+        })
+
+        console.log(url)
+
         res.redirect('/auth/signin')
         
     } catch (error) {
@@ -129,7 +139,8 @@ exports.postresetPassword = async(req, res , next) => {
 
     try {
         const user = await User.findOne({
-            email
+            email,
+            estado : 1
         })
     
         if(!user){
@@ -147,7 +158,7 @@ exports.postresetPassword = async(req, res , next) => {
         enviarEmail.enviarEmail({
             user,
             url,
-            subject : 'Confirma tu correo',
+            subject : 'Reestabelce Password',
             archivo : 'reset-password'
         })
         
@@ -162,7 +173,8 @@ exports.formNewPassword = async(req, res , next) => {
         const token = req.params.token
 
         const user = await User.findOne({
-            token
+            token,
+            estado : 1
         })
        
         if(!user){
@@ -193,7 +205,7 @@ exports.postnewPassword = async(req, res , next) => {
                  
             })
         }
-        const user = await User.findOne({token})
+        const user = await User.findOne({token , estado : 1})
         if(!user){
             req.flash('error','Hubo un problema, vuelva a recargar la pagina')
             return res.redirect('/auth/signin')
@@ -213,4 +225,24 @@ exports.postnewPassword = async(req, res , next) => {
         }
 
         
+}
+
+
+exports.confirmEmail = async(req, res , next) => {
+        const email = req.params.email
+        const user = await User.findOne({
+            email
+        })
+
+        if(!user){
+            req.flash('error','Error, no se ha confirmado el email')
+            return res.redirect('/auth/signin')
+        }
+        try {
+            user.estado = 1
+            await user.save()
+            res.redirect('/auth/signin')
+        } catch (error) {
+            console.log(error)
+        }
 }
