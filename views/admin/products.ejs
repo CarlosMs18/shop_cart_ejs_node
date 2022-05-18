@@ -28,8 +28,12 @@
                                 </div>
                                 <div class="card__actions">
                                     <a href="/admin/edit-product/<%= prods._id %>?edit=true" class="btn">Edit</a>
-                                        <!--  <input type="hidden"name="productId" value="" > -->
-                                        <button class="btn" type="button" onclick="deleteProduct(this)">Delete</button>
+                                         <!-- <input type="hidden"name="productId" value="<%= prods._id %>" > -->
+
+                                         <form action="/admin/delete-product/<%= prods._id %>" method ="POST">
+                                            <button class="btn" type="submit" onclick="deleteProduct(this)">Delete</button>
+                                         </form>
+                                        
                                     </form>
 
                                 </div>

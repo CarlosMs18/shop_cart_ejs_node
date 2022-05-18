@@ -1,5 +1,8 @@
 const {validationResult} = require('express-validator')
+const res = require('express/lib/response')
 const Product = require('../models/product')
+const fs = require('fs')
+
 
 exports.formaddProduct = (req, res, next) => {
     
@@ -89,5 +92,86 @@ exports.getEditProduct = async(req, res , next) => {
             return res.redirect('/admin/products')
         }
 
+        res.render('admin/edit-product',{
+            pageTitle : product.title,
+            path : '/admin/edit-product',
+
+            errorMessage :'',
+            product
+        })
         
+}
+
+exports.postEditProduct = async(req, res , next) => {
+        const title = req.body.title
+        const price = req.body.price
+        const description = req.body.description
+        const imageBody = req.file
+
+
+        const prodId = req.params.idProduct
+        const product = await Product.findOne({id : prodId, userId : req.user._id})
+
+        if(!product){
+            return res.redirect('/admin/products')
+        }
+
+        
+      /*   if(!imageBody){
+            return res.render('admin/edit-product',{
+                pageTitle : product.title,
+                path : '/admin/edit-product',
+                errorMessage : 'Es necesario añadir una imagen con un formato valido',
+                product
+            })
+        } */
+
+        
+        const errors = validationResult(req)
+        if(!errors.isEmpty()){
+            return res.render('admin/edit-product',{
+                pageTitle : product.title,
+                path : '/admin/edit-product',
+                errorMessage : errors.array()[0].msg,
+                product 
+            })
+        }
+
+
+        console.log(product)
+        try {
+            product.title = title
+            product.price = price
+            product.description = description
+
+            
+            if(imageBody){
+                fs.unlinkSync(product.image)
+                product.image = imageBody.path
+            }
+            await product.save()
+            res.redirect('/admin/products')
+            
+        } catch (error) {
+            console.log(error)
+        }
+}
+
+
+exports.postDeleteProduct = async(req, res, next) => {
+        const prodId = req.params.productId
+
+        const product = await Product.findOne({id : prodId , userId : req.user._id})
+
+        if(!product){
+            return res.redirect('/admin/products')
+        }
+
+        try {
+            fs.unlinkSync(product.image)
+            await Product.deleteOne({id:prodId, userId:req.user._id})
+            return res.redirect('/admin/products')
+        } catch (error) {
+            console.log(error)
+        }
 }
