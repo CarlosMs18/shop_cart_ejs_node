@@ -1,5 +1,6 @@
 const Product = require('../models/product')
 const User = require('../models/user')
+const Order = require('../models/order')
 exports.home = async(req, res , next) => {
     
    let message = req.flash('error')
@@ -91,6 +92,47 @@ exports.deleteProductCart = async(req, res , next) => {
 }
 
 
-exports.createOrder = (req, res , next) => {
-    res.send('creating!!')
+exports.createOrder = async(req, res , next) => {
+    const user = await User.findById(req.user._id)
+
+    
+    const items = await user.populate('cart.items.productId')
+    const products = user.cart.items
+
+    if(!user){
+        return res.redirect('/cart')
+    }
+
+    const productsOrder = products.map(e => {
+        
+        return {product : {...e.productId._doc}, quantity : e.quantity}
+    })
+    console.log(productsOrder)
+
+    try {
+        const order =new Order({
+            products : productsOrder,
+            user: {
+                email : user.email,
+                userId : user._id
+    
+            }
+        })
+    
+        await order.save()
+    
+    } catch (error) {
+        console.log(error)
+    }
+   
+}
+
+exports.getOrders = async(req, res , next) => {
+        const orders = await Order.find({'user.userId': req.user._id})
+        
+        res.render('shop/order',{
+            pageTitle : 'Order',
+            path : '/order',
+            orders
+        })
 }
