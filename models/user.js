@@ -33,16 +33,6 @@ const userSchema = Schema({
     expiration : Date
 })
 
-userSchema.pre('save',function(next){
-    if(!this.isModified('password')){
-        console.log('ya esta modificado')
-        next()
-    }
-    console.log('aun no')
-    const hash = bcryptjs.hashSync(this.password, bcryptjs.genSaltSync())
-    this.password = hash
-    next()
-})
 
 
 userSchema.methods.comparePassword = function(password){
@@ -89,6 +79,21 @@ userSchema.methods.deleteItemCart = function(productId){
     this.cart.items = newCartItems
     return this.save()
 }
+
+userSchema.methods.clearCart = function(){
+    this.cart = {items:[]}
+    return this.save()
+}
+userSchema.pre('save',function(next){
+    if(!this.isModified('password')){
+        console.log('ya esta modificado')
+        return next()
+    }
+    console.log('aun no')
+    const hash = bcryptjs.hashSync(this.password, bcryptjs.genSaltSync())
+    this.password = hash
+    next()
+})
 
 
 module.exports = model('User',userSchema)

@@ -2,7 +2,7 @@ const Product = require('../models/product')
 const User = require('../models/user')
 const Order = require('../models/order')
 exports.home = async(req, res , next) => {
-    
+  
    let message = req.flash('error')
    if(message.length > 0){
        message = message[0]
@@ -32,14 +32,14 @@ exports.productIndex = async(req, res , next) => {
 exports.productDetail = async(req, res , next) => {
     const productId = req.params.productId
 
-    const product = await Product.findById(productId)
-    if(!product){
+    const prod = await Product.findById(productId)
+    if(!prod){
         return res.redirect('/')
     }
     res.render('shop/product-detail',{
-        pageTitle : product.title,
+        pageTitle : prod.title,
         path : '/product/detail',
-        product
+        prod
     })
 }
 
@@ -118,8 +118,10 @@ exports.createOrder = async(req, res , next) => {
     
             }
         })
-    
+        
         await order.save()
+        await user.clearCart()
+        res.redirect('/orders')
     
     } catch (error) {
         console.log(error)

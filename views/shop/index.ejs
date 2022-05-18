@@ -6,6 +6,8 @@
     <%- include('../includes/navigation.ejs') %>
 
     <main>
+      
+
         <% if(errorMessage) { %>
             <div class="user-message user-message--error"><%= errorMessage %></div>
             <% } %>
@@ -27,7 +29,10 @@
                         </div>
                         <div class="card__actions">
                             <a href="/product/<%= prod._id %>" class="btn">Details</a>
-                            <%- include('../includes/add-to-cart.ejs',{prod}) %>
+                            <% if(locals.isAuthenticated) { %>
+                                <%- include('../includes/add-to-cart.ejs',{prod}) %>
+                                <% } %>
+                            
                         </div>
                     </article>
 

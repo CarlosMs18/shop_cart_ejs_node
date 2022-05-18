@@ -9,7 +9,7 @@
             <li class="main-header__item">
                 <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products</a>
             </li>
-        
+            <% if(locals.isAuthenticated) { %>
                 <li class="main-header__item">
                     <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
                 </li>
@@ -24,25 +24,27 @@
                     <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
                     </a>
                 </li>
+                <% } %>
                 
         </ul>
         <ul class="main-header__item-list">
            
 
-                
+            <% if(!locals.isAuthenticated) { %>
                 <li class="main-header__item">
                     <a class="<%= path === '/auth/signin' ? 'active' : '' %>" href="/auth/signin">Signin</a>
                 </li>
                 <li class="main-header__item">
                     <a class="<%= path === '/auth/signup' ? 'active' : '' %>" href="/auth/signup">Signup</a>
                 </li>
-                
+                <% } else { %>
                 <li class="main-header__item">
                     <form action="/auth/logout" method="POST">
                         
                         <button type="submit">Logout</button>
                     </form>
                 </li>
+                <% } %>
 
             
         
