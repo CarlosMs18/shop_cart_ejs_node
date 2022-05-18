@@ -117,14 +117,7 @@ exports.postEditProduct = async(req, res , next) => {
         }
 
         
-      /*   if(!imageBody){
-            return res.render('admin/edit-product',{
-                pageTitle : product.title,
-                path : '/admin/edit-product',
-                errorMessage : 'Es necesario añadir una imagen con un formato valido',
-                product
-            })
-        } */
+    
 
         
         const errors = validationResult(req)

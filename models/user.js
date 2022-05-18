@@ -14,6 +14,21 @@ const userSchema = Schema({
         type : Number,
         default : 0
     },
+    cart : {
+        items : [
+            {
+                productId : {
+                    type : Schema.Types.ObjectId,
+                    ref: 'Product',
+                    required :true
+                },
+                quantity :{
+                    type : Number,
+                    required :true
+                }
+            }
+        ]
+    },
     token : String,
     expiration : Date
 })
@@ -33,4 +48,47 @@ userSchema.pre('save',function(next){
 userSchema.methods.comparePassword = function(password){
     return bcryptjs.compareSync(password, this.password)
 }
+
+
+userSchema.methods.addtoCart = function(product){
+
+    const productIndex = this.cart.items.findIndex( p => {
+        return product._id.toString() === p.productId.toString() 
+    })
+
+    const cartItems = [...this.cart.items]
+    let newQuantity = 1
+    if(productIndex >= 0){
+        newQuantity = cartItems[productIndex].quantity + 1
+        cartItems[productIndex].quantity =  newQuantity
+    }else{
+        cartItems.push({
+            productId  : product._id,
+            quantity : 1
+        })
+    }
+
+
+    const newCart = {
+        items: cartItems
+    }
+
+    this.cart = newCart
+    return this.save()
+}
+
+
+userSchema.methods.deleteItemCart = function(productId){
+    
+    const newCartItems = this.cart.items.filter( p => {
+        console.log(p._id.toString())
+        return  productId.toString() !== p.productId.toString()
+        
+    })
+    
+    this.cart.items = newCartItems
+    return this.save()
+}
+
+
 module.exports = model('User',userSchema)
