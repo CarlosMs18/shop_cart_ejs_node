@@ -15,4 +15,6 @@ router.get('/cart',isAuth, shopRoutes.getCart)
 
 
 router.post('/cart-delete-item/:prodId',isAuth,shopRoutes.deleteProductCart)
+
+router.post('/create-order',isAuth,shopRoutes.createOrder)
 module.exports = router

@@ -80,7 +80,7 @@ exports.deleteProductCart = async(req, res , next) => {
     if(!product){
         return res.redirect('/cart')
     }
-    /* console.log(product) */
+  
     const user = await User.findById(req.user._id)
     try {
         user.deleteItemCart(productId)
@@ -88,4 +88,9 @@ exports.deleteProductCart = async(req, res , next) => {
     } catch (error) {
         console.log(error)
     }
+}
+
+
+exports.createOrder = (req, res , next) => {
+    res.send('creating!!')
 }
