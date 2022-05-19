@@ -1,6 +1,9 @@
 const Product = require('../models/product')
 const User = require('../models/user')
 const Order = require('../models/order')
+const PDFDocument = require('pdfkit');
+const path = require('path')
+const fs = require('fs')
 exports.home = async(req, res , next) => {
   
    let message = req.flash('error')
@@ -107,7 +110,7 @@ exports.createOrder = async(req, res , next) => {
         
         return {product : {...e.productId._doc}, quantity : e.quantity}
     })
-    console.log(productsOrder)
+  
 
     try {
         const order =new Order({
@@ -130,11 +133,70 @@ exports.createOrder = async(req, res , next) => {
 }
 
 exports.getOrders = async(req, res , next) => {
+ 
         const orders = await Order.find({'user.userId': req.user._id})
-        
+        let message = req.flash('error')
+        if(message.length > 0 ) {
+            message = message[0]
+        }else{
+            message = null
+        }
         res.render('shop/order',{
             pageTitle : 'Order',
             path : '/order',
-            orders
+            orders,
+            errorMessage : message
         })
+}
+
+
+exports.getInvoce = async(req, res , next) => {
+    const orderId = req.params.orderId
+    
+    const order = await Order.findById(orderId)
+
+    if(!order){
+        req.flash('error','No hay ninguna solicitud de orden pendiente!')
+        return res.redirect('/orders')
+    }
+    
+    const invoiceName = 'invoice-' + orderId + '.pdf';
+    const invoicePath = path.join('data', 'invoices', invoiceName);
+
+    const pdfDoc = new PDFDocument();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      'inline; filename="' + invoiceName + '"'
+    );
+    pdfDoc.pipe(fs.createWriteStream(invoicePath));
+    pdfDoc.pipe(res);
+
+    pdfDoc.fontSize(26).text('Invoice', {
+      underline: true
+    });
+    pdfDoc.text('-----------------------');
+    let totalPrice = 0;
+    order.products.forEach(prod => {
+      totalPrice += prod.quantity * prod.product.price;
+      pdfDoc
+        .fontSize(14)
+        .text(
+          prod.product.title +
+            ' - ' +
+            prod.quantity +
+            ' x ' +
+            '$' +
+            prod.product.price
+        );
+    });
+    pdfDoc.text('---');
+    pdfDoc.fontSize(20).text('Total Price: $' + totalPrice);
+
+    pdfDoc.end();
+        
+       
+    
+
+    
 }

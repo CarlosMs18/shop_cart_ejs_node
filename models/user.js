@@ -87,10 +87,10 @@ userSchema.methods.clearCart = function(){
 }
 userSchema.pre('save',function(next){
     if(!this.isModified('password')){
-        console.log('ya esta modificado')
+       
         return next()
     }
-    console.log('aun no')
+    
     const hash = bcryptjs.hashSync(this.password, bcryptjs.genSaltSync())
     this.password = hash
     next()

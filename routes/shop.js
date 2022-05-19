@@ -19,4 +19,7 @@ router.post('/cart-delete-item/:prodId',isAuth,shopRoutes.deleteProductCart)
 router.post('/create-order',isAuth,shopRoutes.createOrder)
 
 router.get('/orders',isAuth,shopRoutes.getOrders)
+
+
+router.get('/orders/:orderId',isAuth,shopRoutes.getInvoce)
 module.exports = router
