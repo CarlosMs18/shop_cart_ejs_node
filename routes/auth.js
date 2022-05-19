@@ -2,8 +2,9 @@ const authController = require('../controllers/auth')
 const {check} = require('express-validator')
 const Router = require('express')
 const router = Router()
+const redirectHome = require('../middleware/redirect-home')
 
-router.get('/signup',authController.signup)
+router.get('/signup',redirectHome,authController.signup)
 
 
 router.post('/signup',[
@@ -23,7 +24,7 @@ router.post('/signup',[
 ],
 authController.postsignup)
 
-router.get('/signin',authController.signin)
+router.get('/signin',redirectHome,authController.signin)
 
 router.post('/signin',authController.autenticarUsuario)
 
