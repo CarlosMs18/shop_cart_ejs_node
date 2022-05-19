@@ -13,7 +13,7 @@ exports.home = async(req, res , next) => {
        message = ''
    }
     const products = await Product.find()
-    res.render('shop/index',{
+    res.status(200).render('shop/index',{
         pageTitle : 'Home',
         path : '/',
         products,
@@ -24,7 +24,7 @@ exports.home = async(req, res , next) => {
 exports.productIndex = async(req, res , next) => {
 
     const products = await Product.find()
-    res.render('shop/products-index',{
+    res.status(200).render('shop/products-index',{
         pageTitle : 'Products',
         path : '/products',
         products
@@ -39,7 +39,7 @@ exports.productDetail = async(req, res , next) => {
     if(!prod){
         return res.redirect('/')
     }
-    res.render('shop/product-detail',{
+    res.status(200).render('shop/product-detail',{
         pageTitle : prod.title,
         path : '/product/detail',
         prod
@@ -72,7 +72,7 @@ exports.getCart = async(req, res , next) => {
     const user = await User.findOne({_id : req.user._id, estado :1})
     const items = await user.populate('cart.items.productId')
     const products = user.cart.items
-        res.render('shop/cart',{
+        res.status(200).render('shop/cart',{
             pageTitle : 'Cart',
             path : '/cart',
             products

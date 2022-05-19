@@ -6,7 +6,7 @@ const fs = require('fs')
 
 exports.formaddProduct = (req, res, next) => {
     
-    res.render('admin/add-product',{
+    res.status(200).render('admin/add-product',{
         pageTitle : 'Add Product',
         path : '/admin/add-product',
         errorMessage : '',
@@ -21,7 +21,7 @@ exports.postAddProduct =async( req, res, next) => {
     const imageBody = req.file
     
     if(!imageBody){
-        return res.render('admin/add-product',{
+        return res.status(422).render('admin/add-product',{
             pageTitle : 'Add Product',
             path : '/admin/add-product',
             errorMessage : 'Es necesario añadir una imagen',
@@ -36,7 +36,7 @@ exports.postAddProduct =async( req, res, next) => {
     const errors = validationResult(req)
     
     if(!errors.isEmpty()){
-        return res.render('admin/add-product',{
+        return res.status(422).render('admin/add-product',{
             pageTitle : 'Add Product',
             path : '/admin/add-product',
             errorMessage : errors.array()[0].msg,
@@ -75,7 +75,7 @@ exports.adminProduct = async(req, res , next) => {
         userId : req.user._id
     })
     
-    res.render('admin/products',{
+    res.status(200).render('admin/products',{
         pageTitle : 'Admin Products',
         path : '/admin/products',
         products
@@ -94,7 +94,7 @@ exports.getEditProduct = async(req, res , next) => {
             return res.redirect('/admin/products')
         }
 
-        res.render('admin/edit-product',{
+        res.status(200).render('admin/edit-product',{
             pageTitle : product.title,
             path : '/admin/edit-product',
 
@@ -123,7 +123,7 @@ exports.postEditProduct = async(req, res , next) => {
 
         
         const errors = validationResult(req)
-        if(!errors.isEmpty()){
+        if(!errors.status(422).isEmpty()){
             return res.render('admin/edit-product',{
                 pageTitle : product.title,
                 path : '/admin/edit-product',

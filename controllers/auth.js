@@ -11,7 +11,7 @@ exports.signup = (req, res , next) => {
         message =null
     }
     
-    res.render('auth/signup',{
+    res.status(200).render('auth/signup',{
         pageTitle : 'Sign Up',
         errorMessage : message,
         oldInput : '',
@@ -30,7 +30,7 @@ exports.postsignup = async(req, res , next) => {
     const errors = validationResult(req)
    
     if(!errors.isEmpty()){
-        return res.render('auth/signup',{
+        return res.status(422).render('auth/signup',{
             pageTitle : 'Sign Up',
             path : '/auth/signup',
             errorMessage : errors.array()[0].msg,
@@ -88,7 +88,7 @@ exports.signin = (req, res , next) => {
     }
     
     
-    res.render('auth/signin',{
+    res.status(422).render('auth/signin',{
         pageTitle : 'Sign In',
         path : '/auth/signin',
         errorMessage : message,
