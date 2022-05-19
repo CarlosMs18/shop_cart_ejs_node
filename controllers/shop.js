@@ -60,9 +60,11 @@ exports.addtoCart = async(req, res , next) => {
         await user.addtoCart(product)
         res.redirect('/')
      
-    } catch (error) {
-        console.log(error)
-    }
+    } catch (err) {
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        return next(error)
+     }
 }
 
 
@@ -89,9 +91,11 @@ exports.deleteProductCart = async(req, res , next) => {
     try {
         user.deleteItemCart(productId)
         res.redirect('/cart')
-    } catch (error) {
-        console.log(error)
-    }
+    } catch (err) {
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        return next(error)
+     }
 }
 
 
@@ -126,9 +130,11 @@ exports.createOrder = async(req, res , next) => {
         await user.clearCart()
         res.redirect('/orders')
     
-    } catch (error) {
-        console.log(error)
-    }
+    } catch (err) {
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        return next(error)
+     }
    
 }
 

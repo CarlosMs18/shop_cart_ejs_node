@@ -28,7 +28,7 @@ exports.postsignup = async(req, res , next) => {
     const confirmPassword = req.body.confirmPassword
 
     const errors = validationResult(req)
-    console.log(errors)
+   
     if(!errors.isEmpty()){
         return res.render('auth/signup',{
             pageTitle : 'Sign Up',
@@ -51,6 +51,7 @@ exports.postsignup = async(req, res , next) => {
     }
     try {
         const user = new User({
+            _id : 'asdsada',
             email,
             password
         })
@@ -58,18 +59,21 @@ exports.postsignup = async(req, res , next) => {
         await user.save()
         const url = `http://${req.headers.host}/auth/confirm-email/${email}`
         enviarEmail.enviarEmail({
+           
             user,
             url,
             subject : 'Confirma tu correo',
             archivo : 'confirm-email'
         })
 
-        console.log(url)
+        
 
         res.redirect('/auth/signin')
         
-    } catch (error) {
-        console.log(error)
+    }catch (err) {
+       const error = new Error(err)
+       error.httpStatusCode = 500
+       return next(error)
     }
 
 }
@@ -164,9 +168,11 @@ exports.postresetPassword = async(req, res , next) => {
         
 
         res.redirect('/auth/signin')
-    } catch (error) {
-        console.log(error)
-    }
+    } catch (err) {
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        return next(error)
+     }
 }
 
 exports.formNewPassword = async(req, res , next) => {
@@ -220,10 +226,11 @@ exports.postnewPassword = async(req, res , next) => {
             await user.save()
            
             res.redirect('/auth/signin')
-        } catch (error) {
-            console.log(err)
-        }
-
+        } catch (err) {
+            const error = new Error(err)
+            error.httpStatusCode = 500
+            return next(error)
+         }
         
 }
 
@@ -242,7 +249,9 @@ exports.confirmEmail = async(req, res , next) => {
             user.estado = 1
             await user.save()
             res.redirect('/auth/signin')
-        } catch (error) {
-            console.log(error)
-        }
+        } catch (err) {
+            const error = new Error(err)
+            error.httpStatusCode = 500
+            return next(error)
+         }
 }

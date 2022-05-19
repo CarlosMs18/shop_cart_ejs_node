@@ -61,9 +61,11 @@ exports.postAddProduct =async( req, res, next) => {
 
         await product.save()
         res.redirect('/admin/products')
-    } catch (error) {
-        console.log(error)
-    }
+    } catch (err) {
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        return next(error)
+     }
 
 }
 
@@ -145,9 +147,11 @@ exports.postEditProduct = async(req, res , next) => {
             await product.save()
             res.redirect('/admin/products')
             
-        } catch (error) {
-            console.log(error)
-        }
+        } catch (err) {
+            const error = new Error(err)
+            error.httpStatusCode = 500
+            return next(error)
+         }
 }
 
 
@@ -164,7 +168,9 @@ exports.postDeleteProduct = async(req, res, next) => {
             fs.unlinkSync(product.image)
             await Product.deleteOne({id:prodId, userId:req.user._id})
             return res.redirect('/admin/products')
-        } catch (error) {
-            console.log(error)
-        }
+        } catch (err) {
+            const error = new Error(err)
+            error.httpStatusCode = 500
+            return next(error)
+         }
 }
