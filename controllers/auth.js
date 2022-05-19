@@ -51,7 +51,7 @@ exports.postsignup = async(req, res , next) => {
     }
     try {
         const user = new User({
-            _id : 'asdsada',
+            
             email,
             password
         })
